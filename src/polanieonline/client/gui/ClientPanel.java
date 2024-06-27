@@ -7,6 +7,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
+import polanieonline.client.panel.ItemsPanel;
+
 public class ClientPanel extends ClientGUI {
 	private JTabbedPane tabbedPane;
 	private JPanel itemsPanel;
@@ -22,9 +24,7 @@ public class ClientPanel extends ClientGUI {
 	public JPanel createMainPanel() {
 		tabbedPane = new JTabbedPane();
 
-		itemsPanel = new JPanel(new BorderLayout());
-		itemsLabel = new JLabel(getWord("items"));
-		itemsPanel.add(itemsLabel, BorderLayout.CENTER);
+		itemsPanel = new ItemsPanel(getLocale());
 
 		creaturesPanel = new JPanel(new BorderLayout());
 		creaturesLabel = new JLabel(getWord("creatures"));
@@ -40,7 +40,7 @@ public class ClientPanel extends ClientGUI {
 	}
 
 	public void refreshComponents() {
-		itemsLabel.setText(getWord("items"));
+		itemsPanel.updateUI(); // To refresh the ItemsPanel with the new locale
 		creaturesLabel.setText(getWord("creatures"));
 		tabbedPane.setTitleAt(0, getWord("items"));
 		tabbedPane.setTitleAt(1, getWord("creatures"));

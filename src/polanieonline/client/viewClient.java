@@ -10,6 +10,7 @@ import java.util.Locale;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import polanieonline.client.gui.ClientMenu;
@@ -22,6 +23,9 @@ public class viewClient {
 		// Ustawienie "Look and Feel" w stylu Windows
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+			// Wymuszenie odświeżenia UI
+			UIManager.getLookAndFeelDefaults().put("ClassLoader", UIManager.class.getClassLoader());
+			SwingUtilities.updateComponentTreeUI(new JFrame());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -55,6 +59,9 @@ public class viewClient {
 		// Utworzenie obiektu LangSettings i dodanie do ClientMenu
 		LangSettings langSettings = new LangSettings(userLocale, clientMenu, clientPanel);
 		clientMenu.setLangSettings(langSettings);
+
+		// Wymuszenie odświeżenia UI po ustawieniu zawartości
+		SwingUtilities.updateComponentTreeUI(frame);
 
 		// Ustawienie okna jako widocznego
 		frame.setVisible(true);
