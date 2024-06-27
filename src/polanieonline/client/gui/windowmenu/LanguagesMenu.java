@@ -35,7 +35,7 @@ public class LanguagesMenu extends LanguageSystem {
 		JComboBox<String> languageComboBox = new JComboBox<>(languages);
 		panel.add(languageComboBox);
 		
-		JButton applyButton = new JButton("Apply");
+		JButton applyButton = new JButton(getWord("apply"));
 		panel.add(applyButton);
 
 		languagesDialog.add(panel);
