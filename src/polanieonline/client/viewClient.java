@@ -1,10 +1,14 @@
 package polanieonline.client;
 
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.IOException;
 import java.util.Locale;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import polanieonline.client.gui.ClientMenu;
@@ -22,6 +26,14 @@ public class viewClient {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(800, 600);
 		frame.setMinimumSize(new Dimension(800, 600));
+
+		// Załaduj ikonę
+		try {
+			Image icon = ImageIO.read(new File("data/gui/icon.png"));
+			frame.setIconImage(icon);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		// Utworzenie obiektu MainMenu i dodanie menu bar do okna
 		ClientMenu clientMenu = new ClientMenu(userLocale);

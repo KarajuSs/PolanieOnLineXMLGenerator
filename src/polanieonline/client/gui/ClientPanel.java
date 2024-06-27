@@ -1,5 +1,6 @@
 package polanieonline.client.gui;
 
+import java.awt.BorderLayout;
 import java.util.Locale;
 
 import javax.swing.JLabel;
@@ -19,28 +20,21 @@ public class ClientPanel extends ClientGUI {
 
 	@Override
 	public JPanel createMainPanel() {
-		// Utworzenie panelu zakładek
 		tabbedPane = new JTabbedPane();
 
-		// Utworzenie panelu dla "Items"
-		JPanel itemsPanel = new JPanel();
+		itemsPanel = new JPanel(new BorderLayout());
 		itemsLabel = new JLabel(getWord("items"));
-		itemsPanel.add(itemsLabel);
-		// TODO: Dodaj pola tekstowe i inne komponenty do itemsPanel według potrzeb
+		itemsPanel.add(itemsLabel, BorderLayout.CENTER);
 
-		// Utworzenie panelu dla "Creatures"
-		JPanel creaturesPanel = new JPanel();
+		creaturesPanel = new JPanel(new BorderLayout());
 		creaturesLabel = new JLabel(getWord("creatures"));
-		creaturesPanel.add(creaturesLabel);
-		// TODO: Dodaj pola tekstowe i inne komponenty do creaturesPanel według potrzeb
+		creaturesPanel.add(creaturesLabel, BorderLayout.CENTER);
 
-		// Dodanie paneli do zakładek
 		tabbedPane.addTab(getWord("items"), itemsPanel);
 		tabbedPane.addTab(getWord("creatures"), creaturesPanel);
 
-		// Utworzenie głównego panelu
-		JPanel mainPanel = new JPanel();
-		mainPanel.add(tabbedPane);
+		JPanel mainPanel = new JPanel(new BorderLayout());
+		mainPanel.add(tabbedPane, BorderLayout.CENTER);
 
 		return mainPanel;
 	}
