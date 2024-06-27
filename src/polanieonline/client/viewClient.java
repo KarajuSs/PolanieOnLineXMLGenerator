@@ -1,12 +1,15 @@
 package polanieonline.client;
 
+import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Locale;
 
 import javax.swing.JFrame;
 
-import polanieonline.client.gui.MainMenu;
+import polanieonline.client.gui.ClientMenu;
+import polanieonline.client.gui.ClientPanel;
+import polanieonline.client.settings.LangSettings;
 import polanieonline.client.settings.UserSettings;
 
 public class viewClient {
@@ -18,12 +21,20 @@ public class viewClient {
 		JFrame frame = new JFrame("Entities XML struct generator");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(800, 600);
-		frame.setMinimumSize(new java.awt.Dimension(800, 600));
+		frame.setMinimumSize(new Dimension(800, 600));
 
 		// Utworzenie obiektu MainMenu i dodanie menu bar do okna
-		MainMenu mainMenu = new MainMenu(userLocale);
-		mainMenu.setFrame(frame);
-		frame.setJMenuBar(mainMenu.createMenuBar());
+		ClientMenu clientMenu = new ClientMenu(userLocale);
+		clientMenu.setFrame(frame);
+		frame.setJMenuBar(clientMenu.createMenuBar());
+
+		// Utworzenie obiektu MainPanel i dodanie do okna
+		ClientPanel clientPanel = new ClientPanel(userLocale);
+		frame.getContentPane().add(clientPanel.createMainPanel());
+		
+		// Utworzenie obiektu LangSettings i dodanie do ClientMenu
+		LangSettings langSettings = new LangSettings(userLocale, clientMenu, clientPanel);
+		clientMenu.setLangSettings(langSettings);
 
 		// Ustawienie okna jako widocznego
 		frame.setVisible(true);
@@ -32,7 +43,7 @@ public class viewClient {
 		frame.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent windowEvent) {
-				userSettings.setLocale(mainMenu.getLocale());
+				userSettings.setLocale(clientMenu.getLocale());
 				userSettings.saveSettings();
 			}
 		});

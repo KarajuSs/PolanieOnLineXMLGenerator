@@ -9,46 +9,46 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-import polanieonline.client.gui.windowmenu.LanguagesMenu;
 import polanieonline.client.gui.windowmenu.PropertiesMenu;
-import polanieonline.common.language.LanguageSystem;
+import polanieonline.client.settings.LangSettings;
 
-public class MainMenu extends LanguageSystem {
-	private LanguagesMenu languagesMenu;
+public class ClientMenu extends ClientGUI {
+	private LangSettings langSettings;
 	private PropertiesMenu propertiesMenu;
-	private JFrame frame;
 
-	public MainMenu(Locale locale) {
+	public ClientMenu(Locale locale) {
 		super(locale);
 	}
 
+	@Override
 	public void setFrame(JFrame frame) {
-		this.frame = frame;
-		this.languagesMenu = new LanguagesMenu(getLocale(), this);
+		super.setFrame(frame);
 		this.propertiesMenu = new PropertiesMenu(getLocale());
+	}
+
+	public void setLangSettings(LangSettings langSettings) {
+		this.langSettings = langSettings;
 	}
 
 	@Override
 	public void setLocale(Locale locale) {
 		super.setLocale(locale);
-		if (languagesMenu != null) {
-			languagesMenu.setLocale(locale);
+		if (langSettings != null) {
+			langSettings.setLocale(locale);
 		}
 		if (propertiesMenu != null) {
 			propertiesMenu.setLocale(locale);
 		}
-		updateMenu();
+		refresh();
 	}
 
+	@Override
 	public JMenuBar createMenuBar() {
-		// Utworzenie menu bar
 		JMenuBar menuBar = new JMenuBar();
 
-		// Utworzenie menu "File"
 		JMenu fileMenu = new JMenu(getWord("file"));
 		menuBar.add(fileMenu);
-		
-		// Dodanie elementów do menu "File"
+
 		JMenuItem saveMenuItem = new JMenuItem(getWord("save"));
 		fileMenu.add(saveMenuItem);
 
@@ -58,18 +58,17 @@ public class MainMenu extends LanguageSystem {
 		JMenuItem newConfigMenuItem = new JMenuItem(getWord("new_configuration"));
 		fileMenu.add(newConfigMenuItem);
 
-		// Utworzenie menu "Window"
 		JMenu windowMenu = new JMenu(getWord("window"));
 		menuBar.add(windowMenu);
 
-		// Dodanie elementów do menu "Window"
 		JMenuItem languagesMenuItem = new JMenuItem(getWord("languages"));
 		windowMenu.add(languagesMenuItem);
-		// Dodanie akcji do elementów menu
 		languagesMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				languagesMenu.show();
+				if (langSettings != null) {
+					langSettings.show();
+				}
 			}
 		});
 
@@ -82,18 +81,9 @@ public class MainMenu extends LanguageSystem {
 			}
 		});
 
-		// Utworzenie menu "Info"
 		JMenu infoMenu = new JMenu(getWord("info"));
 		menuBar.add(infoMenu);
 
 		return menuBar;
-	}
-
-	public void updateMenu() {
-		if (frame != null) {
-			frame.setJMenuBar(createMenuBar());
-			frame.revalidate();
-			frame.repaint();
-		}
 	}
 }

@@ -1,4 +1,4 @@
-package polanieonline.client.gui.windowmenu;
+package polanieonline.client.settings;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,17 +8,21 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 
-import polanieonline.client.gui.MainMenu;
-import polanieonline.common.language.LanguageSystem;
+import polanieonline.client.gui.ClientGUI;
+import polanieonline.client.gui.ClientMenu;
+import polanieonline.client.gui.ClientPanel;
 
-public class LanguagesMenu extends LanguageSystem {
-	private MainMenu mainMenu;
+public class LangSettings extends ClientGUI {
+	private ClientMenu clientMenu;
+	private ClientPanel clientPanel;
 
-	public LanguagesMenu(Locale locale, MainMenu mainMenu) {
+	public LangSettings(Locale locale, ClientMenu clientMenu, ClientPanel clientPanel) {
 		super(locale);
-		this.mainMenu = mainMenu;
+		this.clientMenu = clientMenu;
+		this.clientPanel = clientPanel;
 	}
 
 	public void show() {
@@ -55,14 +59,26 @@ public class LanguagesMenu extends LanguageSystem {
 
 				if (selectedLocale != null) {
 					setLocale(selectedLocale);
-					mainMenu.setLocale(selectedLocale);
+					clientMenu.setLocale(selectedLocale);
+					clientPanel.setLocale(selectedLocale);
+					clientPanel.refreshComponents();
 				}
 
 				languagesDialog.dispose();
-				mainMenu.updateMenu();
+				refresh();
 			}
 		});
 
 		languagesDialog.setVisible(true);
+	}
+
+	@Override
+	public JPanel createMainPanel() {
+		return new JPanel(); // Placeholder, this method won't be used in this context
+	}
+
+	@Override
+	public JMenuBar createMenuBar() {
+		return new JMenuBar(); // Placeholder, this method won't be used in this context
 	}
 }
