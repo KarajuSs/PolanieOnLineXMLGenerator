@@ -10,6 +10,7 @@ import java.util.Locale;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
+import javax.swing.UIManager;
 
 import polanieonline.client.gui.ClientMenu;
 import polanieonline.client.gui.ClientPanel;
@@ -18,6 +19,13 @@ import polanieonline.client.settings.UserSettings;
 
 public class viewClient {
 	public static void main(String[] args) {
+		// Ustawienie "Look and Feel" w stylu Windows
+		try {
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		UserSettings userSettings = new UserSettings();
 		Locale userLocale = userSettings.getLocale();
 
