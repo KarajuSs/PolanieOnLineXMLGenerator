@@ -40,7 +40,7 @@ public class ClientPanel extends ClientGUI {
 	}
 
 	public void refreshComponents() {
-		itemsPanel.updateUI(); // To refresh the ItemsPanel with the new locale
+		((ItemsPanel) itemsPanel).refreshLanguage(getLocale());
 		creaturesLabel.setText(getWord("creatures"));
 		tabbedPane.setTitleAt(0, getWord("items"));
 		tabbedPane.setTitleAt(1, getWord("creatures"));
