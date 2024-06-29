@@ -1,27 +1,47 @@
 package polanieonline.client.panel;
 
-import polanieonline.common.language.LanguageSystem;
-import polanieonline.client.console.XMLConsole;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ArrayList;
-import java.util.List;
-import java.io.File;
-import javax.swing.filechooser.FileNameExtensionFilter;
+
+import polanieonline.client.console.XMLConsole;
+import polanieonline.common.language.LanguageSystem;
 
 public class ItemsPanel extends JPanel {
 	private JTextField itemNameField;
@@ -78,6 +98,17 @@ public class ItemsPanel extends JPanel {
 		CATEGORY_MAP.put("Miecz", "sword");
 		CATEGORY_MAP.put("Różdżka", "wand");
 		CATEGORY_MAP.put("Bicz", "whip");
+	}
+
+	private static final Map<String, String> ATTRIBUTE_KEYS;
+	static {
+		ATTRIBUTE_KEYS = new HashMap<>();
+		ATTRIBUTE_KEYS.put("minimum_usage_level", "Minimalny poziom używania");
+		ATTRIBUTE_KEYS.put("minimum_equip_level", "Minimalny poziom założenia");
+		ATTRIBUTE_KEYS.put("maximum_upgrade_amount", "Maksymalna ilość ulepszeń");
+		ATTRIBUTE_KEYS.put("attack_speed", "Szybkość ataku");
+		ATTRIBUTE_KEYS.put("defense_value", "Ilość defensywy");
+		ATTRIBUTE_KEYS.put("offense_value", "Ilość ofensywy");
 	}
 
 	private XMLConsole xmlConsole;
@@ -272,8 +303,7 @@ public class ItemsPanel extends JPanel {
 		if (isDefensive) {
 			defenseValueField = createNumericTextField();
 			addAttributeField("defense_value", defenseValueField, gbc);
-			resetDynamicAttributes();
-			addAttributeComboBox.addItem(getWord("offense_value"));
+			gbc.gridy++;
 		} else {
 			offenseValueField = createNumericTextField();
 			addAttributeField("offense_value", offenseValueField, gbc);
@@ -282,16 +312,11 @@ public class ItemsPanel extends JPanel {
 			if (selectedCategory.equals(getWord("ammunition")) || selectedCategory.equals(getWord("ranged")) || selectedCategory.equals(getWord("wand")) || selectedCategory.equals(getWord("magia")) || selectedCategory.equals(getWord("whip"))) {
 				rangeField = createNumericTextField();
 				addAttributeField("range", rangeField, gbc);
-				resetDynamicAttributes();
-				addAttributeComboBox.addItem(getWord("attack_speed"));
-			} else {
-				attackSpeedField = createNumericTextField();
-				addAttributeField("attack_speed", attackSpeedField, gbc);
-				resetDynamicAttributes();
-				addAttributeComboBox.addItem(getWord("defense_value"));
-			}
+				gbc.gridy++;
+			} 
 		}
 
+		resetDynamicAttributes(); // Ensure dynamic attributes are reset and ready to be added
 		attributesPanel.revalidate();
 		attributesPanel.repaint();
 		updateXMLConsole();
@@ -305,6 +330,8 @@ public class ItemsPanel extends JPanel {
 
 	private void addAttributeField(String key, JTextField textField, GridBagConstraints gbc) {
 		JLabel label = new JLabel(getWord(key) + ":");
+		label.putClientProperty("attributeKey", key); // Store the attribute key for later retrieval
+		label.putClientProperty("textField", textField); // Powiązanie textField z label
 		addComponent(attributesPanel, label, gbc.gridx, gbc.gridy, 1, 1, GridBagConstraints.WEST);
 		addComponent(attributesPanel, textField, gbc.gridx + 1, gbc.gridy, 1, 1, GridBagConstraints.EAST);
 		textField.getDocument().addDocumentListener(new DocumentListener() {
@@ -318,15 +345,25 @@ public class ItemsPanel extends JPanel {
 				updateXMLConsole();
 			}
 		});
-		label.putClientProperty("textField", textField);
 	}
 
 	private void resetDynamicAttributes() {
 		addAttributeComboBox.removeAllItems();
 
-		for (String attr : addedAttributes) {
-			if (!Arrays.asList(DEFAULT_DYNAMIC_ATTRIBUTES).contains(attr)) {
-				addAttributeComboBox.addItem(attr);
+		// Dodanie specyficznych dynamicznych atrybutów dla określonych kategorii
+		String selectedCategory = (String) itemCategoryComboBox.getSelectedItem();
+		if (selectedCategory != null) {
+			String englishCategory = CATEGORY_MAP.get(selectedCategory);
+
+			if (isDefensiveCategory(selectedCategory)) {
+				addAttributeComboBox.addItem(getWord("offense_value"));
+			}
+			if (!isDefensiveCategory(selectedCategory) && !("ammunition".equals(englishCategory))) {
+				addAttributeComboBox.addItem(getWord("defense_value"));
+			}
+			
+			if ("ranged".equals(englishCategory) || "wand".equals(englishCategory)) {
+				addAttributeComboBox.addItem(getWord("attack_speed"));
 			}
 		}
 
@@ -334,16 +371,8 @@ public class ItemsPanel extends JPanel {
 			addAttributeComboBox.addItem(getWord(attr));
 		}
 
-		// Reset dynamic attributes from previous selections
-		for (Component component : attributesPanel.getComponents()) {
-			if (component instanceof JLabel) {
-				JLabel label = (JLabel) component;
-				if (label.getClientProperty("textField") instanceof JTextField) {
-					JTextField textField = (JTextField) label.getClientProperty("textField");
-					textField.setText("");
-				}
-			}
-		}
+		attributesPanel.revalidate();
+		attributesPanel.repaint();
 	}
 
 	private boolean isDefensiveCategory(String category) {
@@ -357,16 +386,29 @@ public class ItemsPanel extends JPanel {
 
 	private void addDynamicAttribute() {
 		String selectedAttribute = (String) addAttributeComboBox.getSelectedItem();
-		if (addedAttributes.contains(selectedAttribute)) {
+		String attributeKey = null;
+
+		// Find the key corresponding to the selected attribute
+		for (Map.Entry<String, String> entry : ATTRIBUTE_KEYS.entrySet()) {
+			if (getWord(entry.getKey()).equals(selectedAttribute)) {
+				attributeKey = entry.getKey();
+				break;
+			}
+		}
+
+		if (attributeKey == null || addedAttributes.contains(attributeKey)) {
 			JOptionPane.showMessageDialog(this, getWord("error_duplicate_field"), getWord("error_title"), JOptionPane.ERROR_MESSAGE);
 			return;
 		}
-		addedAttributes.add(selectedAttribute);
+
+		addedAttributes.add(attributeKey);
 
 		GridBagConstraints gbc = createGbc(0, attributesPanel.getComponentCount() / 2 + 1);
 		JLabel label = new JLabel(selectedAttribute + ":");
 		JTextField textField = createNumericTextField();
-		label.putClientProperty("textField", textField);
+		label.putClientProperty("attributeKey", attributeKey); // Store the attribute key for later retrieval
+		label.putClientProperty("textField", textField); // Powiązanie textField z label
+		textField.putClientProperty("attributeKey", attributeKey); // Powiązanie key z textField
 		addComponent(attributesPanel, label, gbc.gridx, gbc.gridy, 1, 1, GridBagConstraints.WEST);
 		addComponent(attributesPanel, textField, gbc.gridx + 1, gbc.gridy, 1, 1, GridBagConstraints.EAST);
 		textField.getDocument().addDocumentListener(new DocumentListener() {
@@ -428,13 +470,26 @@ public class ItemsPanel extends JPanel {
 		for (Component comp : attributesPanel.getComponents()) {
 			if (comp instanceof JLabel) {
 				JLabel label = (JLabel) comp;
-				if (label.getText().startsWith(getWord(key))) {
+				Object attributeKey = label.getClientProperty("attributeKey");
+				if (attributeKey != null && attributeKey.equals(key)) {
 					JTextField textField = (JTextField) label.getClientProperty("textField");
+					if (textField != null) {
+						return textField.getText();
+					}
+				}
+			} else if (comp instanceof JTextField) {
+				JTextField textField = (JTextField) comp;
+				Object attributeKey = textField.getClientProperty("attributeKey");
+				if (attributeKey != null && attributeKey.equals(key)) {
 					return textField.getText();
 				}
 			}
 		}
 		return "";
+	}
+
+	public List<String> getAddedAttributes() {
+		return new ArrayList<>(addedAttributes);
 	}
 
 	private String getWord(String key) {
@@ -469,14 +524,17 @@ public class ItemsPanel extends JPanel {
 
 		@Override
 		public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
-			if (isNumeric(string)) {
+			String newText = fb.getDocument().getText(0, fb.getDocument().getLength()) + string;
+			if (isNumeric(newText)) {
 				super.insertString(fb, offset, string, attr);
 			}
 		}
 
 		@Override
 		public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
-			if (isNumeric(text)) {
+			String newText = fb.getDocument().getText(0, fb.getDocument().getLength());
+			newText = newText.substring(0, offset) + text + newText.substring(offset + length);
+			if (isNumeric(newText)) {
 				super.replace(fb, offset, length, text, attrs);
 			}
 		}

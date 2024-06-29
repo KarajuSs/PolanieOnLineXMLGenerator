@@ -1,27 +1,25 @@
 package polanieonline.client.console;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Font;
+
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+
 import polanieonline.client.panel.ItemsPanel;
 
 public class XMLConsole extends JPanel {
-	private JTextArea xmlTextArea;
+	private JTextArea textArea;
 	private ItemsPanel itemsPanel;
 
-	public XMLConsole(ItemsPanel itemsPanel) {
-		this.itemsPanel = itemsPanel;
+	public XMLConsole() {
 		setLayout(new BorderLayout());
-
-		// XML Text Area
-		xmlTextArea = new JTextArea(20, 50);
-		xmlTextArea.setEditable(false);
-		xmlTextArea.setFont(new Font("Monospaced", Font.PLAIN, 14)); // Powiększona czcionka
-		JScrollPane scrollPane = new JScrollPane(xmlTextArea);
-
-		// Dodanie komponentów do panelu
+		textArea = new JTextArea(20, 40);
+		textArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
+		textArea.setEditable(false);
+		JScrollPane scrollPane = new JScrollPane(textArea);
 		add(scrollPane, BorderLayout.CENTER);
-
-		setBorder(BorderFactory.createTitledBorder("XML Console"));
 	}
 
 	public void setItemsPanel(ItemsPanel itemsPanel) {
@@ -29,61 +27,80 @@ public class XMLConsole extends JPanel {
 	}
 
 	public void refreshXML() {
-		if (itemsPanel == null) {
-			xmlTextArea.setText("");
-			return;
+		if (itemsPanel != null) {
+			textArea.setText(generateXMLContent());
+		} else {
+			textArea.setText("ItemsPanel is not set.");
 		}
-		String xmlContent = generateXMLContent();
-		xmlTextArea.setText(xmlContent);
 	}
 
-	private String generateXMLContent() {
-		String itemName = itemsPanel.getItemName();
-		String itemCategory = itemsPanel.getItemCategory();
-		String itemSubclass = itemsPanel.getItemSubclass();
-		String itemDescription = itemsPanel.getItemDescription();
-		boolean isDefensive = itemsPanel.isDefensive();
-		String defenseValue = itemsPanel.getDefenseValue();
-		String offenseValue = itemsPanel.getOffenseValue();
-		String attackSpeed = itemsPanel.getAttackSpeed();
-		String range = itemsPanel.getRange();
-		String minLevel = itemsPanel.getDynamicAttributeValue("minimum_equip_level");
-		String maxImproves = itemsPanel.getDynamicAttributeValue("maximum_upgrade_amount");
-		String minUse = itemsPanel.getDynamicAttributeValue("minimum_usage_level");
-
+	public String generateXMLContent() {
 		StringBuilder xmlBuilder = new StringBuilder();
-		xmlBuilder.append("<item name=\"").append(itemName).append("\">\n");
-		xmlBuilder.append("\t<type class=\"").append(itemCategory).append("\" subclass=\"")
-				.append(itemSubclass).append("\" tileid=\"-1\"/>\n");
-		xmlBuilder.append("\t<description>").append(itemDescription).append("</description>\n");
+
+		xmlBuilder.append("<item name=\"").append(itemsPanel.getItemName()).append("\">\n");
+		xmlBuilder.append("\t<type class=\"").append(itemsPanel.getItemCategory()).append("\" subclass=\"").append(itemsPanel.getItemSubclass()).append("\" tileid=\"-1\"/>\n");
+		xmlBuilder.append("\t<description>").append(itemsPanel.getItemDescription()).append("</description>\n");
 		xmlBuilder.append("\t<implementation class-name=\"games.stendhal.server.entity.item.Item\"/>\n");
 		xmlBuilder.append("\t<attributes>\n");
 
-		if (offenseValue != null && !offenseValue.isEmpty()) {
-			xmlBuilder.append("\t\t<atk value=\"").append(offenseValue).append("\"/>\n");
+		// Dodanie wartości "atk" i "def" zgodnie z kolejnością
+		String atkValue = itemsPanel.getOffenseValue();
+		String defValue = itemsPanel.getDefenseValue();
+
+		// Dodanie dynamicznych atrybutów jako dodatkowe
+		String dynamicAtkValue = itemsPanel.getDynamicAttributeValue("offense_value");
+		String dynamicDefValue = itemsPanel.getDynamicAttributeValue("defense_value");
+
+		if (atkValue != null && !atkValue.isEmpty()) {
+			xmlBuilder.append("\t\t<atk value=\"").append(atkValue).append("\"/>\n");
+		} else if (dynamicAtkValue != null && !dynamicAtkValue.isEmpty()) {
+			xmlBuilder.append("\t\t<atk value=\"").append(dynamicAtkValue).append("\"/>\n");
 		}
-		if (defenseValue != null && !defenseValue.isEmpty()) {
-			xmlBuilder.append("\t\t<def value=\"").append(defenseValue).append("\"/>\n");
+
+		if (defValue != null && !defValue.isEmpty()) {
+			xmlBuilder.append("\t\t<def value=\"").append(defValue).append("\"/>\n");
+		} else if (dynamicDefValue != null && !dynamicDefValue.isEmpty()) {
+			xmlBuilder.append("\t\t<def value=\"").append(dynamicDefValue).append("\"/>\n");
 		}
-		if (range != null && !range.isEmpty()) {
-			xmlBuilder.append("\t\t<range value=\"").append(range).append("\"/>\n");
-		}
-		if (minUse != null && !minUse.isEmpty()) {
-			xmlBuilder.append("\t\t<min_use value=\"").append(minUse).append("\"/>\n");
-		}
-		if (minLevel != null && !minLevel.isEmpty()) {
-			xmlBuilder.append("\t\t<min_level value=\"").append(minLevel).append("\"/>\n");
-		}
-		if (maxImproves != null && !maxImproves.isEmpty()) {
-			xmlBuilder.append("\t\t<max_improves value=\"").append(maxImproves).append("\"/>\n");
-		}
+
+		// Dynamiczne atrybuty
+		String minUse = itemsPanel.getDynamicAttributeValue("minimum_usage_level");
+		String minLevel = itemsPanel.getDynamicAttributeValue("minimum_equip_level");
+		String maxImproves = itemsPanel.getDynamicAttributeValue("maximum_upgrade_amount");
+		String attackSpeed = itemsPanel.getDynamicAttributeValue("attack_speed");
+		String range = itemsPanel.getRange();
+
 		if (attackSpeed != null && !attackSpeed.isEmpty()) {
 			xmlBuilder.append("\t\t<rate value=\"").append(attackSpeed).append("\"/>\n");
 		}
 
+		if (range != null && !range.isEmpty()) {
+			xmlBuilder.append("\t\t<range value=\"").append(range).append("\"/>\n");
+		}
+
+		if (minUse != null && !minUse.isEmpty()) {
+			xmlBuilder.append("\t\t<min_use value=\"").append(minUse).append("\"/>\n");
+		}
+
+		if (minLevel != null && !minLevel.isEmpty()) {
+			xmlBuilder.append("\t\t<min_level value=\"").append(minLevel).append("\"/>\n");
+		}
+
+		if (maxImproves != null && !maxImproves.isEmpty()) {
+			xmlBuilder.append("\t\t<max_improves value=\"").append(maxImproves).append("\"/>\n");
+		}
+
+		// Dodanie innych dynamicznych atrybutów
+		for (String attr : itemsPanel.getAddedAttributes()) {
+			String value = itemsPanel.getDynamicAttributeValue(attr);
+			if (value != null && !value.isEmpty() && !attr.equals("minimum_usage_level") && !attr.equals("minimum_equip_level") && !attr.equals("maximum_upgrade_amount") && !attr.equals("attack_speed") && !attr.equals("offense_value") && !attr.equals("defense_value")) {
+				xmlBuilder.append("\t\t<").append(attr).append(" value=\"").append(value).append("\"/>\n");
+			}
+		}
+
 		xmlBuilder.append("\t</attributes>\n");
-		xmlBuilder.append("\t<weight value=\"\"/>\n"); // Placeholder for weight
-		xmlBuilder.append("\t<value value=\"\"/>\n"); // Placeholder for value
+		xmlBuilder.append("\t<weight value=\"0\"/>\n");
+		xmlBuilder.append("\t<value value=\"0\"/>\n");
 		xmlBuilder.append("\t<equipable>\n");
 		xmlBuilder.append("\t\t<slot name=\"ground\"/>\n");
 		xmlBuilder.append("\t\t<slot name=\"content\"/>\n");
@@ -91,7 +108,7 @@ public class XMLConsole extends JPanel {
 		xmlBuilder.append("\t\t<slot name=\"trade\"/>\n");
 		xmlBuilder.append("\t\t<slot name=\"armor\"/>\n");
 		xmlBuilder.append("\t</equipable>\n");
-		xmlBuilder.append("</item>\n");
+		xmlBuilder.append("</item>");
 
 		return xmlBuilder.toString();
 	}

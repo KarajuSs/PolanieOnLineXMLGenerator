@@ -2,19 +2,21 @@ package polanieonline.client.gui;
 
 import java.awt.BorderLayout;
 import java.util.Locale;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-import polanieonline.client.panel.ItemsPanel;
+
 import polanieonline.client.console.XMLConsole;
+import polanieonline.client.panel.ItemsPanel;
 
 public class ClientPanel extends ClientGUI {
 	private JTabbedPane tabbedPane;
-	private JPanel itemsPanel;
+	private ItemsPanel itemsPanel;
 	private JPanel creaturesPanel;
-	private XMLConsole xmlConsole;
 	private JLabel itemsLabel;
 	private JLabel creaturesLabel;
+	private XMLConsole xmlConsole;
 
 	public ClientPanel(Locale locale) {
 		super(locale);
@@ -24,9 +26,9 @@ public class ClientPanel extends ClientGUI {
 	public JPanel createMainPanel() {
 		tabbedPane = new JTabbedPane();
 
-		xmlConsole = new XMLConsole(null);
+		xmlConsole = new XMLConsole();
 		itemsPanel = new ItemsPanel(getLocale(), xmlConsole);
-		xmlConsole.setItemsPanel((ItemsPanel) itemsPanel);
+		xmlConsole.setItemsPanel(itemsPanel);
 
 		creaturesPanel = new JPanel(new BorderLayout());
 		creaturesLabel = new JLabel(getWord("creatures"));
@@ -43,7 +45,7 @@ public class ClientPanel extends ClientGUI {
 	}
 
 	public void refreshComponents() {
-		((ItemsPanel) itemsPanel).refreshLanguage(getLocale());
+		itemsPanel.refreshLanguage(getLocale());
 		creaturesLabel.setText(getWord("creatures"));
 		tabbedPane.setTitleAt(0, getWord("items"));
 		tabbedPane.setTitleAt(1, getWord("creatures"));
