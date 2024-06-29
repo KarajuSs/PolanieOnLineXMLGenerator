@@ -313,7 +313,7 @@ public class ItemsPanel extends JPanel {
 				rangeField = createNumericTextField();
 				addAttributeField("range", rangeField, gbc);
 				gbc.gridy++;
-			} 
+			}
 		}
 
 		resetDynamicAttributes(); // Ensure dynamic attributes are reset and ready to be added
@@ -361,7 +361,7 @@ public class ItemsPanel extends JPanel {
 			if (!isDefensiveCategory(selectedCategory) && !("ammunition".equals(englishCategory))) {
 				addAttributeComboBox.addItem(getWord("defense_value"));
 			}
-			
+
 			if ("ranged".equals(englishCategory) || "wand".equals(englishCategory)) {
 				addAttributeComboBox.addItem(getWord("attack_speed"));
 			}
