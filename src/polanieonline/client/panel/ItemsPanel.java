@@ -41,6 +41,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 
 import polanieonline.client.console.XMLConsole;
+import polanieonline.common.filter.NumericDocumentFilter;
 import polanieonline.common.language.LanguageSystem;
 
 public class ItemsPanel extends JPanel {
@@ -70,11 +71,11 @@ public class ItemsPanel extends JPanel {
 	private TitledBorder imagePanelBorder;
 
 	private static final String[] DEFENSIVE_CATEGORIES = {
-			"armor", "belts", "helmet", "cloak", "legs", "boots", "glove", "ring", "shield"
+		"armor", "belts", "helmet", "cloak", "legs", "boots", "glove", "ring", "shield"
 	};
 
 	private static final String[] DEFAULT_DYNAMIC_ATTRIBUTES = {
-			"minimum_usage_level", "minimum_equip_level", "maximum_upgrade_amount"
+		"minimum_usage_level", "minimum_equip_level", "maximum_upgrade_amount"
 	};
 
 	private static final Map<String, String> CATEGORY_MAP;
@@ -236,21 +237,6 @@ public class ItemsPanel extends JPanel {
 
 		add(leftPanel, BorderLayout.CENTER);
 		add(rightPanel, BorderLayout.EAST);
-
-		// Dynamiczne atrybuty
-		addAttributeComboBox = new JComboBox<>(new String[]{});
-		JButton addAttributeButton = new JButton(getWord("add_attribute"));
-		addAttributeButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				addDynamicAttribute();
-				updateXMLConsole();
-			}
-		});
-		JPanel addAttributePanel = new JPanel(new FlowLayout());
-		addAttributePanel.add(addAttributeComboBox);
-		addAttributePanel.add(addAttributeButton);
-		addComponent(attributesPanel, addAttributePanel, 0, 0, 2, 1, GridBagConstraints.CENTER);
 
 		updateAttributesPanel();
 	}
