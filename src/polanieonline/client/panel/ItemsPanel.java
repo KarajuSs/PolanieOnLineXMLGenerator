@@ -70,14 +70,15 @@ public class ItemsPanel extends JPanel {
 	private TitledBorder imagePanelBorder;
 
 	private static final String[] DEFENSIVE_CATEGORIES = {
-		"armor", "belts", "helmet", "cloak", "legs", "boots", "glove", "ring", "shield"
+			"armor", "belts", "helmet", "cloak", "legs", "boots", "glove", "ring", "shield"
 	};
 
 	private static final String[] DEFAULT_DYNAMIC_ATTRIBUTES = {
-		"minimum_usage_level", "minimum_equip_level", "maximum_upgrade_amount"
+			"minimum_usage_level", "minimum_equip_level", "maximum_upgrade_amount"
 	};
 
 	private static final Map<String, String> CATEGORY_MAP;
+
 	static {
 		CATEGORY_MAP = new HashMap<>();
 		CATEGORY_MAP.put("Amunicja", "ammunition");
@@ -101,6 +102,7 @@ public class ItemsPanel extends JPanel {
 	}
 
 	private static final Map<String, String> ATTRIBUTE_KEYS;
+
 	static {
 		ATTRIBUTE_KEYS = new HashMap<>();
 		ATTRIBUTE_KEYS.put("minimum_usage_level", "Minimalny poziom używania");
@@ -137,9 +139,11 @@ public class ItemsPanel extends JPanel {
 			public void changedUpdate(DocumentEvent e) {
 				updateXMLConsole();
 			}
+
 			public void removeUpdate(DocumentEvent e) {
 				updateXMLConsole();
 			}
+
 			public void insertUpdate(DocumentEvent e) {
 				updateXMLConsole();
 			}
@@ -149,10 +153,10 @@ public class ItemsPanel extends JPanel {
 		itemCategoryLabel = new JLabel(getWord("item_category") + ":");
 		addComponent(mainPanel, itemCategoryLabel, 0, 1, 1, 1, GridBagConstraints.WEST);
 		String[] categories = {
-			getWord("ammunition"), getWord("armor"), getWord("axe"), getWord("belts"), getWord("boots"), getWord("cloak"),
-			getWord("club"), getWord("dagger"), getWord("glove"), getWord("helmet"), getWord("legs"),
-			getWord("magia"), getWord("ranged"), getWord("ring"), getWord("shield"), getWord("sword"),
-			getWord("wand"), getWord("whip")
+				getWord("ammunition"), getWord("armor"), getWord("axe"), getWord("belts"), getWord("boots"), getWord("cloak"),
+				getWord("club"), getWord("dagger"), getWord("glove"), getWord("helmet"), getWord("legs"),
+				getWord("magia"), getWord("ranged"), getWord("ring"), getWord("shield"), getWord("sword"),
+				getWord("wand"), getWord("whip")
 		};
 		itemCategoryComboBox = new JComboBox<>(categories);
 		itemCategoryComboBox.addActionListener(new ActionListener() {
@@ -193,9 +197,11 @@ public class ItemsPanel extends JPanel {
 			public void changedUpdate(DocumentEvent e) {
 				updateXMLConsole();
 			}
+
 			public void removeUpdate(DocumentEvent e) {
 				updateXMLConsole();
 			}
+
 			public void insertUpdate(DocumentEvent e) {
 				updateXMLConsole();
 			}
@@ -244,9 +250,8 @@ public class ItemsPanel extends JPanel {
 		JPanel addAttributePanel = new JPanel(new FlowLayout());
 		addAttributePanel.add(addAttributeComboBox);
 		addAttributePanel.add(addAttributeButton);
+		addComponent(attributesPanel, addAttributePanel, 0, 0, 2, 1, GridBagConstraints.CENTER);
 
-		// Dodanie paneli do głównego panelu
-		leftPanel.add(addAttributePanel, BorderLayout.SOUTH);
 		updateAttributesPanel();
 	}
 
@@ -265,10 +270,10 @@ public class ItemsPanel extends JPanel {
 
 		itemCategoryComboBox.removeAllItems();
 		String[] categories = {
-			getWord("ammunition"), getWord("armor"), getWord("axe"), getWord("belts"), getWord("boots"), getWord("cloak"),
-			getWord("club"), getWord("dagger"), getWord("glove"), getWord("helmet"), getWord("legs"),
-			getWord("magia"), getWord("ranged"), getWord("ring"), getWord("shield"), getWord("sword"),
-			getWord("wand"), getWord("whip")
+				getWord("ammunition"), getWord("armor"), getWord("axe"), getWord("belts"), getWord("boots"), getWord("cloak"),
+				getWord("club"), getWord("dagger"), getWord("glove"), getWord("helmet"), getWord("legs"),
+				getWord("magia"), getWord("ranged"), getWord("ring"), getWord("shield"), getWord("sword"),
+				getWord("wand"), getWord("whip")
 		};
 		for (String category : categories) {
 			itemCategoryComboBox.addItem(category);
@@ -284,10 +289,25 @@ public class ItemsPanel extends JPanel {
 		attributesPanel.removeAll();
 		addedAttributes.clear();
 
+		// Dynamiczne atrybuty
+		addAttributeComboBox = new JComboBox<>(new String[]{});
+		JButton addAttributeButton = new JButton(getWord("add_attribute"));
+		addAttributeButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				addDynamicAttribute();
+				updateXMLConsole();
+			}
+		});
+		JPanel addAttributePanel = new JPanel(new FlowLayout());
+		addAttributePanel.add(addAttributeComboBox);
+		addAttributePanel.add(addAttributeButton);
+		addComponent(attributesPanel, addAttributePanel, 0, 0, 2, 1, GridBagConstraints.CENTER);
+
 		String selectedCategory = (String) itemCategoryComboBox.getSelectedItem();
 		boolean isDefensive = isDefensiveCategory(selectedCategory);
 
-		GridBagConstraints gbc = createGbc(0, 0);
+		GridBagConstraints gbc = createGbc(0, 1);
 
 		if (selectedCategory == null) {
 			System.err.println("Selected category is null");
@@ -338,9 +358,11 @@ public class ItemsPanel extends JPanel {
 			public void changedUpdate(DocumentEvent e) {
 				updateXMLConsole();
 			}
+
 			public void removeUpdate(DocumentEvent e) {
 				updateXMLConsole();
 			}
+
 			public void insertUpdate(DocumentEvent e) {
 				updateXMLConsole();
 			}
@@ -415,9 +437,11 @@ public class ItemsPanel extends JPanel {
 			public void changedUpdate(DocumentEvent e) {
 				updateXMLConsole();
 			}
+
 			public void removeUpdate(DocumentEvent e) {
 				updateXMLConsole();
 			}
+
 			public void insertUpdate(DocumentEvent e) {
 				updateXMLConsole();
 			}
