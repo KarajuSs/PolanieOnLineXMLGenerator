@@ -45,7 +45,7 @@ public class ClientPanel extends ClientGUI {
 	}
 
 	public void refreshComponents() {
-		itemsPanel.refreshLanguage(getLocale());
+		itemsPanel.refresh();
 		creaturesLabel.setText(getWord("creatures"));
 		tabbedPane.setTitleAt(0, getWord("items"));
 		tabbedPane.setTitleAt(1, getWord("creatures"));
