@@ -38,14 +38,14 @@ public class XMLConsole extends JPanel {
 		StringBuilder xmlBuilder = new StringBuilder();
 
 		xmlBuilder.append("<item name=\"").append(itemsPanel.getItemName()).append("\">\n");
-		xmlBuilder.append("\t<type class=\"").append(itemsPanel.getItemCategory()).append("\" subclass=\"").append(itemsPanel.getItemSubclass()).append("\" tileid=\"-1\"/>\n");
+		xmlBuilder.append("\t<type class=\"").append(itemsPanel.getItemClass()).append("\" subclass=\"").append(itemsPanel.getItemSubclass()).append("\" tileid=\"-1\"/>\n");
 		xmlBuilder.append("\t<description>").append(itemsPanel.getItemDescription()).append("</description>\n");
 		xmlBuilder.append("\t<implementation class-name=\"games.stendhal.server.entity.item.Item\"/>\n");
 		xmlBuilder.append("\t<attributes>\n");
 
 		// Dodanie wartości "atk" i "def" zgodnie z kolejnością
-		String atkValue = itemsPanel.getOffenseValue();
-		String defValue = itemsPanel.getDefenseValue();
+		String atkValue = itemsPanel.getAtkValue();
+		String defValue = itemsPanel.getDefValue();
 
 		// Dodanie dynamicznych atrybutów jako dodatkowe
 		String dynamicAtkValue = itemsPanel.getDynamicAttributeValue("offense_value");
@@ -68,7 +68,7 @@ public class XMLConsole extends JPanel {
 		String minLevel = itemsPanel.getDynamicAttributeValue("minimum_equip_level");
 		String maxImproves = itemsPanel.getDynamicAttributeValue("maximum_upgrade_amount");
 		String attackSpeed = itemsPanel.getDynamicAttributeValue("attack_speed");
-		String range = itemsPanel.getRange();
+		String range = itemsPanel.getRangeValue();
 
 		if (attackSpeed != null && !attackSpeed.isEmpty()) {
 			xmlBuilder.append("\t\t<rate value=\"").append(attackSpeed).append("\"/>\n");
