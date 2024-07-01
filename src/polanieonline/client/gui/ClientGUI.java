@@ -1,11 +1,12 @@
 package polanieonline.client.gui;
 
+import java.util.Locale;
+
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 
 import polanieonline.common.language.LanguageSystem;
-import java.util.Locale;
 
 public class ClientGUI extends LanguageSystem {
 	protected JFrame frame;
