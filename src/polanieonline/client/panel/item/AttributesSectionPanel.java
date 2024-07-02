@@ -214,7 +214,7 @@ public class AttributesSectionPanel extends SectionPanel {
 		itemAttrPanel.repaint();
 	}
 
-	private boolean isDefensiveCategory(String category) {
+	public boolean isDefensiveCategory(String category) {
 		for (String defensiveCategory : DEFENSIVE_CATEGORIES) {
 			if (getLangKey(defensiveCategory).equals(category)) {
 				return true;

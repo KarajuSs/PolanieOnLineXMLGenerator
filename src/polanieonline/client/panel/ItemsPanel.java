@@ -9,11 +9,15 @@ import javax.swing.JPanel;
 
 import polanieonline.client.console.XMLConsole;
 import polanieonline.client.panel.item.AttributesSectionPanel;
+import polanieonline.client.panel.item.EquipmentSlotSectionPanel;
 import polanieonline.client.panel.item.MainSectionPanel;
+import polanieonline.client.panel.item.SpecialSectionPanel;
 
 public class ItemsPanel extends JPanel {
 	private MainSectionPanel msp;
 	private AttributesSectionPanel asp;
+	private EquipmentSlotSectionPanel esp;
+	private SpecialSectionPanel ssp;
 	private XMLConsole xmlConsole;
 
 	public ItemsPanel(Locale locale, XMLConsole xmlConsole) {
@@ -22,9 +26,22 @@ public class ItemsPanel extends JPanel {
 
 		msp = new MainSectionPanel(this, locale, xmlConsole);
 		asp = new AttributesSectionPanel(this, locale, xmlConsole);
+		esp = new EquipmentSlotSectionPanel(this, locale, xmlConsole);
+		ssp = new SpecialSectionPanel(this, locale, xmlConsole);
 
-		add(msp, BorderLayout.NORTH);
-		add(asp, BorderLayout.CENTER);
+		JPanel panel = new JPanel(new BorderLayout());
+		panel.add(msp, BorderLayout.NORTH);
+
+		JPanel doublePanel = new JPanel(new BorderLayout());
+		doublePanel.add(ssp, BorderLayout.NORTH);
+		doublePanel.add(esp, BorderLayout.SOUTH);
+
+		JPanel bottomPanel = new JPanel(new BorderLayout());
+		bottomPanel.add(asp, BorderLayout.CENTER);
+		bottomPanel.add(doublePanel, BorderLayout.EAST);
+
+		panel.add(bottomPanel, BorderLayout.CENTER);
+		add(panel, BorderLayout.CENTER);
 	}
 
 	public String getItemName() {
@@ -56,6 +73,8 @@ public class ItemsPanel extends JPanel {
 	}
 	public void updateAttributesPanel() {
 		asp.updateAttributesPanel();
+		esp.updateCheckBoxesForClass(getSelectedItemClass());
+		ssp.resetFields();
 	}
 	public Map<String, String> getItemClassesMap() {
 		return asp.getItemClassesMap();
@@ -67,9 +86,18 @@ public class ItemsPanel extends JPanel {
 	public String getDynamicAttributeValue(String langKey) {
 		return asp.getDynamicAttributeValue(langKey);
 	}
+	public boolean isDefensiveCategory(String category) {
+		return asp.isDefensiveCategory(category);
+	}
+
+	public String[] getSelectedSlots() {
+		return esp.getSelectedSlots();
+	}
 
 	public void refresh() {
 		msp.refresh();
 		asp.refresh();
+		ssp.refresh();
+		esp.refresh();
 	}
 }
