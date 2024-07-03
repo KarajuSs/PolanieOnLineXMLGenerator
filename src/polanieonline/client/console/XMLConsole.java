@@ -102,11 +102,13 @@ public class XMLConsole extends JPanel {
 		xmlBuilder.append("\t<weight value=\"0\"/>\n");
 		xmlBuilder.append("\t<value value=\"0\"/>\n");
 		xmlBuilder.append("\t<equipable>\n");
-		xmlBuilder.append("\t\t<slot name=\"ground\"/>\n");
-		xmlBuilder.append("\t\t<slot name=\"content\"/>\n");
-		xmlBuilder.append("\t\t<slot name=\"bag\"/>\n");
-		xmlBuilder.append("\t\t<slot name=\"trade\"/>\n");
-		xmlBuilder.append("\t\t<slot name=\"armor\"/>\n");
+		for (String slot : itemsPanel.getSelectedSlots()) {
+			if (slot.isEmpty()) {
+				continue;
+			}
+
+			xmlBuilder.append("\t\t<slot name=\""+ slot +"\"/>\n");
+		}
 		xmlBuilder.append("\t</equipable>\n");
 		xmlBuilder.append("</item>");
 
