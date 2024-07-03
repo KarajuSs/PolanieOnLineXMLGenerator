@@ -1,10 +1,13 @@
 package polanieonline.client.panel.item;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -15,6 +18,7 @@ import javax.swing.border.TitledBorder;
 import polanieonline.client.console.XMLConsole;
 import polanieonline.client.panel.ItemsPanel;
 import polanieonline.common.filter.IntegerNumericFilter;
+import polanieonline.common.listener.SimpleDocumentListener;
 
 public class SpecialSectionPanel extends SectionPanel {
 	private ItemsPanel itemsPanel;
@@ -67,12 +71,16 @@ public class SpecialSectionPanel extends SectionPanel {
 			panel.add(elementLabel, gbc);
 
 			elementCheckBoxes[index] = new JCheckBox();
-			elementCheckBoxes[index].addActionListener(e -> toggleElementField(index));
+			elementCheckBoxes[index].addActionListener(e -> {
+				toggleElementField(index);
+				updateXMLConsole();
+			});
 			gbc.gridx = 1;
 			panel.add(elementCheckBoxes[index], gbc);
 
 			elementValueFields[index] = createNumericTextField();
 			elementValueFields[index].setEnabled(false);
+			elementValueFields[index].getDocument().addDocumentListener(new SimpleDocumentListener(() -> updateXMLConsole()));
 			gbc.gridx = 2;
 			gbc.weightx = 0.9;
 			panel.add(elementValueFields[index], gbc);
@@ -102,6 +110,25 @@ public class SpecialSectionPanel extends SectionPanel {
 				field.setEnabled(true);
 			}
 		}
+	}
+
+	public Map<String, Double> getSusceptibilityValues() {
+		Map<String, Double> protectionValues = new HashMap<>();
+		for (int i = 0; i < ELEMENTS.length; i++) {
+			if (elementCheckBoxes[i].isSelected()) {
+				try {
+					int intValue = Integer.parseInt(elementValueFields[i].getText());
+					if (intValue < 0 || intValue > 200) {
+						throw new NumberFormatException("Value out of range");
+					}
+					double value = intValue / 100.0;
+					protectionValues.put(ELEMENTS[i], value);
+				} catch (NumberFormatException e) {
+					protectionValues.put(ELEMENTS[i], 0.0);
+				}
+			}
+		}
+		return protectionValues;
 	}
 
 	private void toggleElementField(int index) {

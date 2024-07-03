@@ -94,6 +94,10 @@ public class ItemsPanel extends JPanel {
 		return esp.getSelectedSlots();
 	}
 
+	public Map<String, Double> getSusceptibilityValues() {
+		return ssp.getSusceptibilityValues();
+	}
+
 	public void refresh() {
 		msp.refresh();
 		asp.refresh();

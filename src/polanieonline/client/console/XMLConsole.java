@@ -2,6 +2,7 @@ package polanieonline.client.console;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
+import java.util.Map;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -101,6 +102,12 @@ public class XMLConsole extends JPanel {
 		xmlBuilder.append("\t</attributes>\n");
 		xmlBuilder.append("\t<weight value=\"0\"/>\n");
 		xmlBuilder.append("\t<value value=\"0\"/>\n");
+
+		Map<String, Double> susceptibilityValues = itemsPanel.getSusceptibilityValues();
+		for (Map.Entry<String, Double> entry : susceptibilityValues.entrySet()) {
+			xmlBuilder.append("\t<susceptibility type=\"").append(entry.getKey()).append("\" value=\"").append(entry.getValue()).append("\"/>\n");
+		}
+
 		xmlBuilder.append("\t<equipable>\n");
 		for (String slot : itemsPanel.getSelectedSlots()) {
 			if (slot.isEmpty()) {
