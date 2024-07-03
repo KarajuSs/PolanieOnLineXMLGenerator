@@ -138,7 +138,21 @@ public class SpecialSectionPanel extends SectionPanel {
 	private JTextField createNumericTextField() {
 		JTextField textField = new JTextField(10);
 		textField.setDocument(new IntegerNumericFilter());
+		textField.getDocument().addDocumentListener(new SimpleDocumentListener(() -> validateValue(textField)));
 		return textField;
+	}
+
+	private void validateValue(JTextField textField) {
+		try {
+			int value = Integer.parseInt(textField.getText());
+			if (value < 0 || value > 200) {
+				textField.setBackground(Color.RED);
+			} else {
+				textField.setBackground(Color.WHITE);
+			}
+		} catch (NumberFormatException e) {
+			textField.setBackground(Color.RED);
+		}
 	}
 
 	public void refresh() {
