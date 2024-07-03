@@ -88,23 +88,10 @@ public class EquipmentSlotSectionPanel extends SectionPanel {
 				gloveCheckBox, fingerbCheckBox, legsCheckBox, feetCheckBox
 		};
 
-		slotPanel.add(groundCheckBox);
-		slotPanel.add(contentCheckBox);
-		slotPanel.add(bagCheckBox);
-		slotPanel.add(tradeCheckBox);
-
-		slotPanel.add(neckCheckBox);
-		slotPanel.add(headCheckBox);
-		slotPanel.add(cloakCheckBox);
-		slotPanel.add(lhandCheckBox);
-		slotPanel.add(armorCheckBox);
-		slotPanel.add(rhandCheckBox);
-		slotPanel.add(fingerCheckBox);
-		slotPanel.add(beltCheckBox);
-		slotPanel.add(gloveCheckBox);
-		slotPanel.add(fingerbCheckBox);
-		slotPanel.add(legsCheckBox);
-		slotPanel.add(feetCheckBox);
+		for (JCheckBox checkBox : allCheckBoxes) {
+			checkBox.addActionListener(e -> updateXMLConsole());
+			slotPanel.add(checkBox);
+		}
 
 		add(slotPanel, BorderLayout.CENTER);
 	}
