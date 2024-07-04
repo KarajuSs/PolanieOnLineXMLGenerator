@@ -35,7 +35,7 @@ public abstract class SectionPanel extends JPanel {
 	}
 
 	public String getLangKey(String key) {
-		return languageSystem.getWord(key);
+		return languageSystem.getLangKey(key);
 	}
 
 	public void addComponent(Container container, Component component, int gridx, int gridy, int gridwidth, int gridheight, int anchor) {

@@ -46,22 +46,22 @@ public class ClientMenu extends ClientGUI {
 	public JMenuBar createMenuBar() {
 		JMenuBar menuBar = new JMenuBar();
 
-		JMenu fileMenu = new JMenu(getWord("file"));
+		JMenu fileMenu = new JMenu(getLangKey("file"));
 		menuBar.add(fileMenu);
 
-		JMenuItem saveMenuItem = new JMenuItem(getWord("save"));
+		JMenuItem saveMenuItem = new JMenuItem(getLangKey("save"));
 		fileMenu.add(saveMenuItem);
 
-		JMenuItem saveAsMenuItem = new JMenuItem(getWord("save_as"));
+		JMenuItem saveAsMenuItem = new JMenuItem(getLangKey("save_as"));
 		fileMenu.add(saveAsMenuItem);
 
-		JMenuItem newConfigMenuItem = new JMenuItem(getWord("new_configuration"));
+		JMenuItem newConfigMenuItem = new JMenuItem(getLangKey("new_configuration"));
 		fileMenu.add(newConfigMenuItem);
 
-		JMenu windowMenu = new JMenu(getWord("window"));
+		JMenu windowMenu = new JMenu(getLangKey("window"));
 		menuBar.add(windowMenu);
 
-		JMenuItem languagesMenuItem = new JMenuItem(getWord("languages"));
+		JMenuItem languagesMenuItem = new JMenuItem(getLangKey("languages"));
 		windowMenu.add(languagesMenuItem);
 		languagesMenuItem.addActionListener(new ActionListener() {
 			@Override
@@ -72,7 +72,7 @@ public class ClientMenu extends ClientGUI {
 			}
 		});
 
-		JMenuItem propertiesMenuItem = new JMenuItem(getWord("properties"));
+		JMenuItem propertiesMenuItem = new JMenuItem(getLangKey("properties"));
 		windowMenu.add(propertiesMenuItem);
 		propertiesMenuItem.addActionListener(new ActionListener() {
 			@Override
@@ -81,7 +81,7 @@ public class ClientMenu extends ClientGUI {
 			}
 		});
 
-		JMenu infoMenu = new JMenu(getWord("info"));
+		JMenu infoMenu = new JMenu(getLangKey("info"));
 		menuBar.add(infoMenu);
 
 		return menuBar;

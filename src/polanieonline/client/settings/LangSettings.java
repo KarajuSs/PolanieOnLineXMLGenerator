@@ -27,19 +27,19 @@ public class LangSettings extends ClientGUI {
 
 	public void show() {
 		JDialog languagesDialog = new JDialog();
-		languagesDialog.setTitle(getWord("languages"));
+		languagesDialog.setTitle(getLangKey("languages"));
 		languagesDialog.setSize(400, 300);
 		languagesDialog.setModal(true);
 		languagesDialog.setLocationRelativeTo(null);
 
 		// Dodanie przykładowych opcji do okna dialogowego "Languages"
 		JPanel panel = new JPanel();
-		panel.add(new JLabel(getWord("choose_language")));
+		panel.add(new JLabel(getLangKey("choose_language")));
 		String[] languages = {"English", "Español", "Polski"};
 		JComboBox<String> languageComboBox = new JComboBox<>(languages);
 		panel.add(languageComboBox);
 		
-		JButton applyButton = new JButton(getWord("apply"));
+		JButton applyButton = new JButton(getLangKey("apply"));
 		panel.add(applyButton);
 
 		languagesDialog.add(panel);

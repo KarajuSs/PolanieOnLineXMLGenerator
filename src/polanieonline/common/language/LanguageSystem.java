@@ -8,7 +8,7 @@ import java.util.ResourceBundle;
 
 public class LanguageSystem {
 	private Locale locale;
-	private ResourceBundle messages;
+	private ResourceBundle langKey;
 
 	public LanguageSystem(Locale locale) {
 		setLocale(locale);
@@ -19,7 +19,7 @@ public class LanguageSystem {
 		String basePath = "data/languages/";
 		try {
 			String bundlePath = basePath + "lang_" + locale.getLanguage() + ".properties";
-			messages = new PropertyResourceBundle(new FileInputStream(bundlePath));
+			langKey = new PropertyResourceBundle(new FileInputStream(bundlePath));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -29,7 +29,7 @@ public class LanguageSystem {
 		return locale;
 	}
 
-	public String getWord(String key) {
-		return messages.getString(key);
+	public String getLangKey(String key) {
+		return langKey.getString(key);
 	}
 }

@@ -16,7 +16,7 @@ public class PropertiesMenu extends LanguageSystem {
 
 	public void show() {
 		JDialog propertiesDialog = new JDialog();
-		propertiesDialog.setTitle(getWord("properties"));
+		propertiesDialog.setTitle(getLangKey("properties"));
 		propertiesDialog.setSize(400, 300);
 		propertiesDialog.setModal(true);
 		propertiesDialog.setLocationRelativeTo(null);

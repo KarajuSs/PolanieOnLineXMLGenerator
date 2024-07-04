@@ -31,12 +31,12 @@ public class ClientPanel extends ClientGUI {
 		xmlConsole.setItemsPanel(itemsPanel);
 
 		creaturesPanel = new JPanel(new BorderLayout());
-		creaturesLabel = new JLabel(getWord("creatures"));
+		creaturesLabel = new JLabel(getLangKey("creatures"));
 		creaturesPanel.add(creaturesLabel, BorderLayout.CENTER);
 
-		tabbedPane.addTab(getWord("items"), itemsPanel);
-		tabbedPane.addTab(getWord("creatures"), creaturesPanel);
-		tabbedPane.addTab(getWord("xml_console"), xmlConsole);
+		tabbedPane.addTab(getLangKey("items"), itemsPanel);
+		tabbedPane.addTab(getLangKey("creatures"), creaturesPanel);
+		tabbedPane.addTab(getLangKey("xml_console"), xmlConsole);
 
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		mainPanel.add(tabbedPane, BorderLayout.CENTER);
@@ -46,9 +46,9 @@ public class ClientPanel extends ClientGUI {
 
 	public void refreshComponents() {
 		itemsPanel.refresh();
-		creaturesLabel.setText(getWord("creatures"));
-		tabbedPane.setTitleAt(0, getWord("items"));
-		tabbedPane.setTitleAt(1, getWord("creatures"));
-		tabbedPane.setTitleAt(2, getWord("xml_console"));
+		creaturesLabel.setText(getLangKey("creatures"));
+		tabbedPane.setTitleAt(0, getLangKey("items"));
+		tabbedPane.setTitleAt(1, getLangKey("creatures"));
+		tabbedPane.setTitleAt(2, getLangKey("xml_console"));
 	}
 }
