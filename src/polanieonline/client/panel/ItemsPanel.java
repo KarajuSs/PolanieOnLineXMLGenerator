@@ -1,5 +1,7 @@
 package polanieonline.client.panel;
 
+import static polanieonline.common.constants.Nature.ELEMENTS_KEYS;
+
 import java.awt.BorderLayout;
 import java.util.List;
 import java.util.Locale;
@@ -97,6 +99,14 @@ public class ItemsPanel extends SectionPanel {
 
 	public Map<String, Double> getSusceptibilityValues() {
 		return ssp.getSusceptibilityValues();
+	}
+
+	public String[] getNatureTypes() {
+		return ELEMENTS_KEYS.values().toArray(new String[0]);
+	}
+
+	public String[] getTranslationNatureTypes() {
+		return ELEMENTS_KEYS.keySet().toArray(new String[0]);
 	}
 
 	public void refresh() {

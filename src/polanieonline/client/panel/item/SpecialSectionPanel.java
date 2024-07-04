@@ -29,8 +29,6 @@ public class SpecialSectionPanel extends SectionPanel {
 	private JCheckBox[] elementCheckBoxes;
 	private JTextField[] elementValueFields;
 
-	private static final String[] ELEMENTS = {"earth", "ice", "water", "fire", "light", "dark"};
-
 	public SpecialSectionPanel(ItemsPanel itemsPanel, Locale locale, XMLConsole xmlConsole) {
 		super(locale, xmlConsole);
 		this.itemsPanel = itemsPanel;
@@ -58,13 +56,12 @@ public class SpecialSectionPanel extends SectionPanel {
 	}
 
 	private void generateFields(GridBagConstraints gbc) {
-		elementCheckBoxes = new JCheckBox[ELEMENTS.length];
-		elementValueFields = new JTextField[ELEMENTS.length];
+		elementCheckBoxes = new JCheckBox[getNatureTypes().length];
+		elementValueFields = new JTextField[getNatureTypes().length];
 
-		for (int i = 0; i < ELEMENTS.length; i++) {
+		for (int i = 0; i < getNatureTypes().length; i++) {
 			final int index = i; // Użycie tymczasowej zmiennej finalnej
-			String element = ELEMENTS[i];
-			JLabel elementLabel = new JLabel(getLangKey(element) + ":");
+			JLabel elementLabel = new JLabel(getTranslationNatureTypes()[i] + ":");
 			gbc.gridx = 0;
 			gbc.gridy = i;
 			gbc.weightx = 0.1;
@@ -96,7 +93,7 @@ public class SpecialSectionPanel extends SectionPanel {
 		String selectedCategory = itemsPanel.getSelectedItemClass();
 		boolean isDefensive = itemsPanel.isDefensiveCategory(selectedCategory);
 
-		for (int i = 0; i < ELEMENTS.length; i++) {
+		for (int i = 0; i < getNatureTypes().length; i++) {
 			JCheckBox checkbox = elementCheckBoxes[i];
 			JTextField field = elementValueFields[i];
 
@@ -114,7 +111,7 @@ public class SpecialSectionPanel extends SectionPanel {
 
 	public Map<String, Double> getSusceptibilityValues() {
 		Map<String, Double> protectionValues = new HashMap<>();
-		for (int i = 0; i < ELEMENTS.length; i++) {
+		for (int i = 0; i < getNatureTypes().length; i++) {
 			if (elementCheckBoxes[i].isSelected()) {
 				try {
 					int intValue = Integer.parseInt(elementValueFields[i].getText());
@@ -122,13 +119,21 @@ public class SpecialSectionPanel extends SectionPanel {
 						throw new NumberFormatException("Value out of range");
 					}
 					double value = intValue / 100.0;
-					protectionValues.put(ELEMENTS[i], value);
+					protectionValues.put(getNatureTypes()[i], value);
 				} catch (NumberFormatException e) {
-					protectionValues.put(ELEMENTS[i], 0.0);
+					protectionValues.put(getNatureTypes()[i], 0.0);
 				}
 			}
 		}
 		return protectionValues;
+	}
+
+	private String[] getNatureTypes() {
+		return itemsPanel.getNatureTypes();
+	}
+
+	private String[] getTranslationNatureTypes() {
+		return itemsPanel.getTranslationNatureTypes();
 	}
 
 	private void toggleElementField(int index) {
