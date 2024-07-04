@@ -92,11 +92,18 @@ public class XMLConsole extends JPanel {
 		}
 
 		// Dodanie innych dynamicznych atrybutów
+		// TODO: Do usunięcia w pózniejszym etapie
 		for (String attr : itemsPanel.getAddedAttributes()) {
 			String value = itemsPanel.getDynamicAttributeValue(attr);
 			if (value != null && !value.isEmpty() && !attr.equals("minimum_usage_level") && !attr.equals("minimum_equip_level") && !attr.equals("maximum_upgrade_amount") && !attr.equals("attack_speed") && !attr.equals("offense_value") && !attr.equals("defense_value")) {
 				xmlBuilder.append("\t\t<").append(attr).append(" value=\"").append(value).append("\"/>\n");
 			}
+		}
+
+		// Dodanie typu natury dla broni
+		String natureType = itemsPanel.getSelectedNatureType();
+		if (natureType != null && !natureType.isEmpty()) {
+			xmlBuilder.append("\t\t<damagetype value=\"").append(natureType).append("\"/>\n");
 		}
 
 		xmlBuilder.append("\t</attributes>\n");

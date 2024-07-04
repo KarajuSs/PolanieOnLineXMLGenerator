@@ -92,6 +92,9 @@ public class ItemsPanel extends SectionPanel {
 	public boolean isDefensiveCategory(String category) {
 		return asp.isDefensiveCategory(category);
 	}
+	public String getSelectedNatureType() {
+		return asp.getSelectedNatureType();
+	}
 
 	public String[] getSelectedSlots() {
 		return esp.getSelectedSlots();

@@ -1,18 +1,24 @@
 package polanieonline.client.panel.item;
 
+import static polanieonline.common.constants.Item.ATTRIBUTE_KEYS;
+import static polanieonline.common.constants.Item.CLASS_KEYS;
+import static polanieonline.common.constants.Item.DEFAULT_DYNAMIC_ATTRIBUTES;
+import static polanieonline.common.constants.Item.DEFENSIVE_CLASS;
+import static polanieonline.common.constants.Nature.ELEMENTS_KEYS;
+
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -38,49 +44,11 @@ public class AttributesSectionPanel extends SectionPanel {
 	private JTextField attackSpeedField;
 	private JTextField rangeField;
 
+	private JCheckBox natureTypeCheckBox;
+	private JComboBox<String> natureTypeComboBox;
+
 	private JComboBox<String> addAttrList;
 	private List<String> addedAttributes = new ArrayList<>();
-
-	private static final String[] DEFENSIVE_CATEGORIES = {
-		"armor", "belts", "helmet", "cloak", "legs", "boots", "glove", "ring", "shield"
-	};
-	private static final String[] DEFAULT_DYNAMIC_ATTRIBUTES = {
-		"minimum_usage_level", "minimum_equip_level", "maximum_upgrade_amount"
-	};
-
-	public static final Map<String, String> CATEGORY_MAP;
-	static {
-		CATEGORY_MAP = new HashMap<>();
-		CATEGORY_MAP.put("Amunicja", "ammunition");
-		CATEGORY_MAP.put("Zbroja", "armor");
-		CATEGORY_MAP.put("Topór", "axe");
-		CATEGORY_MAP.put("Pas", "belts");
-		CATEGORY_MAP.put("Buty", "boots");
-		CATEGORY_MAP.put("Płaszcz", "cloak");
-		CATEGORY_MAP.put("Młot", "club");
-		CATEGORY_MAP.put("Sztylet", "dagger");
-		CATEGORY_MAP.put("Rękawice", "glove");
-		CATEGORY_MAP.put("Hełm", "helmet");
-		CATEGORY_MAP.put("Spodnie", "legs");
-		CATEGORY_MAP.put("Zaklęcie magiczne", "magia");
-		CATEGORY_MAP.put("Broń zasięgowa", "ranged");
-		CATEGORY_MAP.put("Pierścień", "ring");
-		CATEGORY_MAP.put("Tarcza", "shield");
-		CATEGORY_MAP.put("Miecz", "sword");
-		CATEGORY_MAP.put("Różdżka", "wand");
-		CATEGORY_MAP.put("Bicz", "whip");
-	}
-
-	private static final Map<String, String> ATTRIBUTE_KEYS;
-	static {
-		ATTRIBUTE_KEYS = new HashMap<>();
-		ATTRIBUTE_KEYS.put("minimum_usage_level", "Minimalny poziom używania");
-		ATTRIBUTE_KEYS.put("minimum_equip_level", "Minimalny poziom założenia");
-		ATTRIBUTE_KEYS.put("maximum_upgrade_amount", "Maksymalna ilość ulepszeń");
-		ATTRIBUTE_KEYS.put("attack_speed", "Szybkość ataku");
-		ATTRIBUTE_KEYS.put("defense_value", "Ilość defensywy");
-		ATTRIBUTE_KEYS.put("offense_value", "Ilość ofensywy");
-	}
 
 	public AttributesSectionPanel(ItemsPanel itemsPanel, Locale locale, XMLConsole xmlConsole) {
 		super(locale, xmlConsole);
@@ -136,6 +104,8 @@ public class AttributesSectionPanel extends SectionPanel {
 		offenseValueField = null;
 		attackSpeedField = null;
 		rangeField = null;
+		natureTypeCheckBox = null;
+		natureTypeComboBox = null;
 
 		if (isDefensive) {
 			defenseValueField = createNumericTextField();
@@ -158,11 +128,36 @@ public class AttributesSectionPanel extends SectionPanel {
 				addAttributeField("range", rangeField, gbc);
 				gbc.gridy++;
 			}
+
+			// Dodanie typu natury dla przedmiotów ofensywnych
+			JLabel natureTypeLabel = new JLabel(getLangKey("nature_type") + ":");
+			natureTypeCheckBox = new JCheckBox();
+			natureTypeCheckBox.addActionListener(e -> toggleNatureTypeField());
+
+			JPanel natureTypePanel = new JPanel(new FlowLayout());
+			natureTypePanel.add(natureTypeCheckBox);
+			natureTypePanel.add(natureTypeLabel);
+
+			addComponent(itemAttrPanel, natureTypePanel, gbc.gridx, gbc.gridy, 1, 1, GridBagConstraints.WEST);
+
+			natureTypeComboBox = new JComboBox<>(itemsPanel.getTranslationNatureTypes());
+			natureTypeComboBox.setEnabled(false);
+			natureTypeComboBox.addActionListener(e -> updateXMLConsole());
+
+			gbc.gridx++;
+			addComponent(itemAttrPanel, natureTypeComboBox, gbc.gridx, gbc.gridy, 1, 1, GridBagConstraints.EAST);
+			gbc.gridy++;
 		}
 
 		resetDynamicAttributes(); // Ensure dynamic attributes are reset and ready to be added
 		itemAttrPanel.revalidate();
 		itemAttrPanel.repaint();
+		updateXMLConsole();
+	}
+
+	private void toggleNatureTypeField() {
+		boolean selected = natureTypeCheckBox.isSelected();
+		natureTypeComboBox.setEnabled(selected);
 		updateXMLConsole();
 	}
 
@@ -192,7 +187,7 @@ public class AttributesSectionPanel extends SectionPanel {
 		// Dodanie specyficznych dynamicznych atrybutów dla określonych kategorii
 		String selectedCategory = itemsPanel.getSelectedItemClass();
 		if (selectedCategory != null) {
-			String englishCategory = CATEGORY_MAP.get(selectedCategory);
+			String englishCategory = CLASS_KEYS.get(selectedCategory);
 
 			if (isDefensiveCategory(selectedCategory)) {
 				addAttrList.addItem(getAtkName());
@@ -215,7 +210,7 @@ public class AttributesSectionPanel extends SectionPanel {
 	}
 
 	public boolean isDefensiveCategory(String category) {
-		for (String defensiveCategory : DEFENSIVE_CATEGORIES) {
+		for (String defensiveCategory : DEFENSIVE_CLASS) {
 			if (getLangKey(defensiveCategory).equals(category)) {
 				return true;
 			}
@@ -229,8 +224,8 @@ public class AttributesSectionPanel extends SectionPanel {
 
 		// Find the key corresponding to the selected attribute
 		for (Map.Entry<String, String> entry : ATTRIBUTE_KEYS.entrySet()) {
-			if (getLangKey(entry.getKey()).equals(selectedAttribute)) {
-				attributeKey = entry.getKey();
+			if (getLangKey(entry.getValue()).equals(selectedAttribute)) {
+				attributeKey = entry.getValue();
 				break;
 			}
 		}
@@ -289,7 +284,7 @@ public class AttributesSectionPanel extends SectionPanel {
 	}
 	
 	public Map<String, String> getItemClassesMap() {
-		return CATEGORY_MAP;
+		return CLASS_KEYS;
 	}
 
 	private String getAttrButtonTitle() {
@@ -319,6 +314,14 @@ public class AttributesSectionPanel extends SectionPanel {
 	}
 	public String getRangeValue() {
 		return rangeField != null ? rangeField.getText() : "";
+	}
+
+	public String getSelectedNatureType() {
+		if (natureTypeCheckBox != null && natureTypeCheckBox.isSelected() && natureTypeComboBox != null) {
+			String selectedNature = (String) natureTypeComboBox.getSelectedItem();
+			return ELEMENTS_KEYS.get(selectedNature); // Return the key from the translation
+		}
+		return null;
 	}
 
 	public void refresh() {
