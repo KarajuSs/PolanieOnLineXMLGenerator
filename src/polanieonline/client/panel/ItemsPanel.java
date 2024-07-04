@@ -11,9 +11,10 @@ import polanieonline.client.console.XMLConsole;
 import polanieonline.client.panel.item.AttributesSectionPanel;
 import polanieonline.client.panel.item.EquipmentSlotSectionPanel;
 import polanieonline.client.panel.item.MainSectionPanel;
+import polanieonline.client.panel.item.SectionPanel;
 import polanieonline.client.panel.item.SpecialSectionPanel;
 
-public class ItemsPanel extends JPanel {
+public class ItemsPanel extends SectionPanel {
 	private MainSectionPanel msp;
 	private AttributesSectionPanel asp;
 	private EquipmentSlotSectionPanel esp;
@@ -21,7 +22,7 @@ public class ItemsPanel extends JPanel {
 	private XMLConsole xmlConsole;
 
 	public ItemsPanel(Locale locale, XMLConsole xmlConsole) {
-		this.xmlConsole = xmlConsole;
+		super(locale, xmlConsole);
 		setLayout(new BorderLayout());
 
 		msp = new MainSectionPanel(this, locale, xmlConsole);
@@ -103,5 +104,10 @@ public class ItemsPanel extends JPanel {
 		asp.refresh();
 		ssp.refresh();
 		esp.refresh();
+	}
+
+	@Override
+	protected String getPanelTitle() {
+		return null;
 	}
 }
