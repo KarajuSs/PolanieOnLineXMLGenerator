@@ -29,6 +29,7 @@ import javax.swing.text.AbstractDocument;
 
 import polanieonline.client.console.XMLConsole;
 import polanieonline.client.panel.ItemsPanel;
+import polanieonline.common.filter.DecimalDocumentFilter;
 import polanieonline.common.filter.NumericDocumentFilter;
 import polanieonline.common.listener.SimpleActionListener;
 import polanieonline.common.listener.SimpleDocumentListener;
@@ -172,6 +173,12 @@ public class AttributesSectionPanel extends SectionPanel {
 		return textField;
 	}
 
+	private JTextField createDecimalTextField() {
+		JTextField textField = new JTextField(10);
+		((AbstractDocument) textField.getDocument()).setDocumentFilter(new DecimalDocumentFilter());
+		return textField;
+	}
+
 	private void addAttributeField(String key, JTextField textField, GridBagConstraints gbc) {
 		JLabel label = new JLabel(getLangKey(key) + ":");
 		label.putClientProperty("attributeKey", key); // Store the attribute key for later retrieval
@@ -192,8 +199,11 @@ public class AttributesSectionPanel extends SectionPanel {
 			if (isDefensiveCategory(selectedCategory)) {
 				addAttrList.addItem(getAtkName());
 			}
-			if (!isDefensiveCategory(selectedCategory) && !("ammunition".equals(englishCategory))) {
+			if (!isDefensiveCategory(selectedCategory) && !"ammunition".equals(englishCategory)) {
 				addAttrList.addItem(getDefName());
+				if (!"magia".equals(englishCategory)) {
+					addAttrList.addItem(getLifeStealName());
+				}
 			}
 
 			if ("ranged".equals(englishCategory) || "wand".equals(englishCategory)) {
@@ -239,7 +249,7 @@ public class AttributesSectionPanel extends SectionPanel {
 
 		GridBagConstraints gbc = createGbc(0, itemAttrPanel.getComponentCount() / 2 + 1);
 		JLabel label = new JLabel(selectedAttribute + ":");
-		JTextField textField = createNumericTextField();
+		JTextField textField = "lifesteal".equals(attributeKey) ? createDecimalTextField() : createNumericTextField();
 		label.putClientProperty("attributeKey", attributeKey); // Store the attribute key for later retrieval
 		label.putClientProperty("textField", textField); // Powiązanie textField z label
 		textField.putClientProperty("attributeKey", attributeKey); // Powiązanie key z textField
@@ -301,6 +311,9 @@ public class AttributesSectionPanel extends SectionPanel {
 	}
 	private String getRangeName() {
 		return getLangKey("range");
+	}
+	private String getLifeStealName() {
+		return getLangKey("lifesteal");
 	}
 
 	public String getAtkValue() {

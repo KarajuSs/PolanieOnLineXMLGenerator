@@ -53,5 +53,6 @@ public class Item {
 		ATTRIBUTE_KEYS.put(lang.getLangKey("attack_speed"), "attack_speed");
 		ATTRIBUTE_KEYS.put(lang.getLangKey("defense_value"), "defense_value");
 		ATTRIBUTE_KEYS.put(lang.getLangKey("offense_value"), "offense_value");
+		ATTRIBUTE_KEYS.put(lang.getLangKey("lifesteal"), "lifesteal");
 	}
 }

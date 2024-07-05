@@ -70,13 +70,14 @@ public class XMLConsole extends JPanel {
 		String maxImproves = itemsPanel.getDynamicAttributeValue("maximum_upgrade_amount");
 		String attackSpeed = itemsPanel.getDynamicAttributeValue("attack_speed");
 		String range = itemsPanel.getRangeValue();
-
-		if (attackSpeed != null && !attackSpeed.isEmpty()) {
-			xmlBuilder.append("\t\t<rate value=\"").append(attackSpeed).append("\"/>\n");
-		}
+		String lifesteal = itemsPanel.getDynamicAttributeValue("lifesteal");
 
 		if (range != null && !range.isEmpty()) {
 			xmlBuilder.append("\t\t<range value=\"").append(range).append("\"/>\n");
+		}
+
+		if (lifesteal != null && !lifesteal.isEmpty()) {
+			xmlBuilder.append("\t\t<lifesteal value=\"").append(lifesteal).append("\"/>\n");
 		}
 
 		if (minUse != null && !minUse.isEmpty()) {
@@ -91,19 +92,14 @@ public class XMLConsole extends JPanel {
 			xmlBuilder.append("\t\t<max_improves value=\"").append(maxImproves).append("\"/>\n");
 		}
 
-		// Dodanie innych dynamicznych atrybutów
-		// TODO: Do usunięcia w pózniejszym etapie
-		for (String attr : itemsPanel.getAddedAttributes()) {
-			String value = itemsPanel.getDynamicAttributeValue(attr);
-			if (value != null && !value.isEmpty() && !attr.equals("minimum_usage_level") && !attr.equals("minimum_equip_level") && !attr.equals("maximum_upgrade_amount") && !attr.equals("attack_speed") && !attr.equals("offense_value") && !attr.equals("defense_value")) {
-				xmlBuilder.append("\t\t<").append(attr).append(" value=\"").append(value).append("\"/>\n");
-			}
-		}
-
 		// Dodanie typu natury dla broni
 		String natureType = itemsPanel.getSelectedNatureType();
 		if (natureType != null && !natureType.isEmpty()) {
 			xmlBuilder.append("\t\t<damagetype value=\"").append(natureType).append("\"/>\n");
+		}
+
+		if (attackSpeed != null && !attackSpeed.isEmpty()) {
+			xmlBuilder.append("\t\t<rate value=\"").append(attackSpeed).append("\"/>\n");
 		}
 
 		xmlBuilder.append("\t</attributes>\n");
